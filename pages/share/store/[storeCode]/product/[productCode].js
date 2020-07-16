@@ -5,9 +5,6 @@ import { useRouter } from 'next/router'
 export async function getServerSideProps(context) {
   const { params, req, res, query, preview, previewData } = context;
 
-  console.error('-------------------------');
-
-
   console.log("query ", query);
   const { storeCode, productCode } = query;
 
@@ -61,10 +58,6 @@ export async function getServerSideProps(context) {
   }
 }
 
-
-
-
-
 const ShareProduct = (props) => {
   const { store, product, image } = props;
   // const imageURL = `${process.env.NEXT_APP_IMG_API_CDN}/?tenant_id=${image.key}&last_modified=${image.lastModified}`;
@@ -99,10 +92,5 @@ const ShareProduct = (props) => {
     </>
   );
 }
-
-
-
-
-
 
 export default ShareProduct;
