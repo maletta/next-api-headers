@@ -2,4 +2,5 @@
 .next
 .env
 .env.production
+yarn.lock
 /node_modules
