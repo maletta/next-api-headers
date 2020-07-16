@@ -1,1 +1,0 @@
-{"ast":null,"code":"var __jsx = React.createElement;\nimport React from 'react';\n\nconst NotFound = () => __jsx(\"div\", null, \"404\");\n\nexport default NotFound;","map":null,"metadata":{},"sourceType":"module"}
