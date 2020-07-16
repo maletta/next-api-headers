@@ -1,6 +1,8 @@
 import Head from "next/head";
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useRouter } from 'next/router'
+
+import slug from '../../../../../utils/slug';
 
 export async function getServerSideProps(context) {
   const { params, req, res, query, preview, previewData } = context;
@@ -10,7 +12,7 @@ export async function getServerSideProps(context) {
 
   // tratar erro de store não encontrada
   const stringStoreFetched = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeCode}`
-  
+
   const storeFetched = await fetch(stringStoreFetched).then(r => r.json())
   const store = {
     tenantId: storeFetched.id || '',
@@ -43,8 +45,15 @@ export async function getServerSideProps(context) {
   const stringFetchedImage = `${process.env.NEXT_APP_PHOTO_SERVICE}/list/?tenant_id=${id}&id=${productCode}`
   const productImagesFetched = await fetch(stringFetchedImage).then(r => r.json()).catch();
 
-  const [image] = productImagesFetched; 
-  console.log('image ',image);
+  //const [image] = productImagesFetched; 
+  //console.log('image ',image);
+
+  const domain = {
+    name: store.fantasy,
+    url: process.env.NEXT_APP_CATALOG_URL.replace('USER', store.user),
+    parameters: `/item/${product.code}/${slug(product.description)}`,
+
+  }
 
 
 
@@ -53,42 +62,47 @@ export async function getServerSideProps(context) {
     props: {
       store,
       product,
-      image
+      domain
+      // image,
+      // url,
     },
   }
 }
 
 const ShareProduct = (props) => {
-  const { store, product, image } = props;
+  const { store, product, domain, image } = props;
+  // console.log('url', props.url);
   // const imageURL = `${process.env.NEXT_APP_IMG_API_CDN}/?tenant_id=${image.key}&last_modified=${image.lastModified}`;
-  const imageURL = `${process.env.NEXT_APP_IMG_API_CDN}/product=${product.code}&lastUpdate=${product.update}`;
+  const url = `${process.env.NEXT_APP_IMG_API_CDN}/product/${product.code}?lastUpdate=${product.update}`;
+
+
+
+  useEffect(() => {
+    window.location.assign(`${domain.url}${domain.parameters}`);
+  }, [])
 
   return (
     <>
       <Head>
-        <meta property="og:site_name" content="" />
-        <meta property="og:url" content="localhost:3000" />
+        <meta property="og:site_name" content={domain.name} />
+        <meta property="og:url" content={domain.url} />
         <meta name="og:title" property="og:title" content={store.description} />
         <meta property="og:type" content="website" />
         <meta name="description" content={product.description} />
         <meta name="og:description" property="og:description" content={product.description} />
-        <meta property="og:image" content={imageURL} />
-        <meta property="og:image:alt" content="descrever imagem" />
-        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image" content={url} />
+        <meta property="og:image:alt" content="uma imagem do produto compartilhado" />
+        <meta property="og:image:type" content="image/jpg" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content={store.description}  />
-        <meta name="twitter:description" content={product.description}  />
-        <meta name="twitter:site" content="localhost:3000" />
-        <meta name="twitter:creator" content="maletta" />
+        <meta name="twitter:title" content={store.description} />
+        <meta name="twitter:description" content={product.description} />
+        <meta name="twitter:site" content={domain.url} />
+        <meta name="twitter:creator" content={domain.name} />
         <meta name="viewport" content="width=device-width, initial-scale1" />
         <meta charSet="utf-8" />
-        <title>"Primeiro site next"</title>
+        <title>{domain.name}</title>
       </Head>
-      <section>
-        <div className="content">SSR</div>
-        <div className="content">SSR teste 2</div>
-
-      </section>
+      <img src={url} />
     </>
   );
 }
