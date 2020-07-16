@@ -1,0 +1,1 @@
+{"ast":null,"code":"var __jsx = React.createElement;\nimport React from 'react';\n\nvar Share = function Share() {\n  return __jsx(\"div\", null, \"HUHEUHUE\");\n};\n\nexport default Share;","map":null,"metadata":{},"sourceType":"module"}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"var __jsx = React.createElement;\nimport Head from \"next\";\nimport React from 'react';\n\nconst Index = () => __jsx(React.Fragment, null, __jsx(Head, null), __jsx(\"section\", null, __jsx(\"div\", {\n  className: \"content\"\n}, \"teste\")));\n\nexport default Index;","map":null,"metadata":{},"sourceType":"module"}
