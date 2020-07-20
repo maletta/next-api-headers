@@ -73,11 +73,12 @@ async function downloadImage(url) {
       const buffer = Buffer.from(response.data, 'binary');
 
       const dimensions = sizeOf(buffer);
-      const urlMetaTag = buffer.toString('base64');
+      const imageToBase64 = buffer.toString('base64');
 
       return {
-        base64: `${prefixBase64}${urlMetaTag}` || '',
+        base64: `${prefixBase64}${imageToBase64}` || '',
         dimensions: dimensions || { width: 0, height: 0 },
+        url,
       };
     })
 }
@@ -129,7 +130,7 @@ export async function getServerSideProps(context) {
 
 const ShareProduct = (props) => {
   const { store, product, domain, image, imageProperties, newDomain } = props;
-  const url = `https://cdn-dev.smartpos.net.br/product/${product.code}?lastUpdate=${product.update}`;
+  // const url = `https://cdn-dev.smartpos.net.br/product/${product.code}?lastUpdate=${product.update}`;
   // const dimension = imageSize(`https://cdn-dev.smartpos.net.br/product/${product.code}?lastUpdate=${product.update}`)
   // const [img, setImg] = useState()
 
@@ -154,7 +155,7 @@ const ShareProduct = (props) => {
         <meta property="og:type" content="website" />
         <meta name="description" content={product.description} />
         <meta name="og:description" property="og:description" content={product.description} />
-        <meta property="og:image" content={url} />
+        <meta property="og:image" content={imageProperties.url} />
         <meta property="og:image:width" content={imageProperties.dimensions.width} />
         <meta property="og:image:height" content={imageProperties.dimensions.height} />
         <meta property="og:image:alt" content="uma imagem do produto compartilhado" />
