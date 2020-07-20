@@ -1,0 +1,48 @@
+image: netpos/node-aws
+options:
+  docker: true
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - node
+        name: ✨ Lint
+        script:
+          - yarn install
+          - yarn lint
+  branches:
+    develop:
+      - step:
+          caches:
+            - node
+          name: 🚀 Deploy development environment
+          image: atlassian/pipelines-awscli:latest
+          deployment: test
+          script:
+            # aws login
+            - eval $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
+            # docker
+            - export BUILD_ID=$BITBUCKET_BRANCH_$BITBUCKET_COMMIT_$BITBUCKET_BUILD_NUMBER
+            - docker build -t ${AWS_REGISTRY_URL}:$BUILD_ID .
+            - docker push ${AWS_REGISTRY_URL}:$BUILD_ID
+            - docker tag ${AWS_REGISTRY_URL}:$BUILD_ID ${AWS_REGISTRY_URL}:development
+            - docker push ${AWS_REGISTRY_URL}:development
+            # Update task definition & service
+    master:
+      - step:
+          caches:
+            - node
+          name: 🚀 Deploy production environment
+          image: atlassian/pipelines-awscli:latest
+          deployment: production
+          script:
+            # aws login
+            - eval $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
+            # docker
+            - export BUILD_ID=$BITBUCKET_BRANCH_$BITBUCKET_COMMIT_$BITBUCKET_BUILD_NUMBER
+            - docker build -t ${AWS_REGISTRY_URL}:$BUILD_ID .
+            - docker push ${AWS_REGISTRY_URL}:$BUILD_ID
+            - docker tag ${AWS_REGISTRY_URL}:$BUILD_ID ${AWS_REGISTRY_URL}:production
+            - docker push ${AWS_REGISTRY_URL}:production
+            # Update task definition & service
