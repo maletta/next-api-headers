@@ -48,23 +48,25 @@ async function searchProduct(url) {
     }))
 }
 
-function getDomain(store, product) {
+function getDomain(req, res, store, product) {
+  const hostDomain = `https://${req.headers.host}${req.url}`;
   if (store.tenantId && product)
     return {
       name: store.fantasy,
       url: process.env.NEXT_APP_CATALOG_URL.replace('USER', store.user),
       parameters: `/item/${product.code}/${slug(product.description)}`,
+      hostDomain
     }
   else
     return {
       name: 'Smartpos',
       url: 'https://www.smartpos.net.br',
       parameters: '',
+      hostDomain
     }
 }
 
 async function downloadImage(url) {
-  const prefixBase64 = `data:image/jpeg;base64, `;
   return axios
     .get(url, {
       responseType: 'arraybuffer'
@@ -73,10 +75,7 @@ async function downloadImage(url) {
       const buffer = Buffer.from(response.data, 'binary');
 
       const dimensions = sizeOf(buffer);
-      const imageToBase64 = buffer.toString('base64');
-
       return {
-        base64: `${prefixBase64}${imageToBase64}` || '',
         dimensions: dimensions || { width: 0, height: 0 },
         url,
       };
@@ -85,7 +84,8 @@ async function downloadImage(url) {
 
 
 async function getImageProperties(product) {
-  const imageUrl = product.code ? `https://cdn-dev.smartpos.net.br/product/${product.code}?lastUpdate=${product.update}` :
+  const imageUrl = product.code ? 
+  `${process.env.NEXT_APP_IMG_API_CDN}/product/${product.code}?lastUpdate=${product.update}` :
     "https://null.qa.smartpos.net.br/images/catalogo-share.jpg";
 
   return downloadImage(imageUrl).then(r => r);
@@ -94,24 +94,16 @@ async function getImageProperties(product) {
 export async function getServerSideProps(context) {
   const { params, req, res, query, preview, previewData } = context;
 
-  console.log(`(-----------------------------------------------`);
-  console.log("query ", query);
-  console.log('req ', `http://${req.headers.host}${req.url}`);
-
-
-  const newDomain = `http://${req.headers.host}${req.url}`;
   const { storeCode, productCode } = query;
 
   const stringStoreFetched = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeCode}`;
   const store = await searchStore(stringStoreFetched);
 
-  console.log('store ', store);
-
   const stringProduct = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${store.tenantId}/produtos/${productCode}`;
   const product = await searchProduct(stringProduct);
 
 
-  const domain = getDomain(store, product);
+  const domain = getDomain(req, res, store, product);
   const imageProperties = await getImageProperties(product);
 
 
@@ -121,28 +113,15 @@ export async function getServerSideProps(context) {
       product,
       domain,
       imageProperties,
-      newDomain,
-      // image,
-      // url,
     },
   }
 }
 
 const ShareProduct = (props) => {
-  const { store, product, domain, image, imageProperties, newDomain } = props;
-  // const url = `https://cdn-dev.smartpos.net.br/product/${product.code}?lastUpdate=${product.update}`;
-  // const dimension = imageSize(`https://cdn-dev.smartpos.net.br/product/${product.code}?lastUpdate=${product.update}`)
-  // const [img, setImg] = useState()
-
+  const { store, product, domain, image, imageProperties } = props;
 
   useEffect(() => {
     // window.location.assign(`${domain.url}${domain.parameters}`);
-    // const aux = new Image();
-    // aux.src = url;
-    // console.log(url)
-    // aux.onload = () => {
-    //   setImg(url);
-    // };
     console.log(imageProperties);
   }, [])
 
@@ -150,7 +129,7 @@ const ShareProduct = (props) => {
     <>
       <Head>
         <meta property="og:site_name" content={`${domain.name}`} />
-        <meta property="og:url" content={`${newDomain}`} />
+        <meta property="og:url" content={`${domain.hostDomain}`} />
         <meta name="og:title" property="og:title" content={`${store.fantasy}`} />
         <meta property="og:type" content="website" />
         <meta name="description" content={product.description} />
@@ -170,9 +149,6 @@ const ShareProduct = (props) => {
         <meta charSet="utf-8" />
         <title>{domain.name}</title>
       </Head>
-      {
-        // <img src={imageProperties.base64} />
-      }
     </>
   );
 }

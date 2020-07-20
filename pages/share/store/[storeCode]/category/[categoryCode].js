@@ -5,12 +5,30 @@ import sizeOf from 'buffer-image-size';
 
 import slug from '../../../../../utils/slug';
 
+async function searchStore(url) {
+  return axios
+    .get(url)
+    .then(response => {
+      return {
+        tenantId: response.data.id,
+        code: response.data.codigo,
+        user: response.data.usuario,
+        fantasy: response.data.fantasia,
+      }
+    }
+    ).catch(response => ({
+      tenantId: null,
+      code: null,
+      user: null,
+      fantasy: null,
+    }))
+}
 
-function searchCategory(url){
-  axios.
-  get(url)
-  .then(r => r)
-  .catch(r => r)
+async function searchCategory(url) {
+  return axios.
+    get(url)
+    .then(r => r.data)
+    .catch(r => null)
 }
 
 
@@ -22,22 +40,38 @@ export async function getServerSideProps(context) {
   console.log("query ", query);
   console.log('req ', `http://${req.headers.host}${req.url}`);
 
-  const {storeCode,categoryCode} = query; 
-  
-const stringSearchCategory = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/produtos/`
+  const { storeCode, categoryCode } = query;
+
+  const stringStoreFetched = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeCode}`;
+
+  const store = await searchStore(stringStoreFetched);
+
+  const stringSearchCategory = `${process.env.NEXT_APP_MAIN_API}/categoria/${categoryCode}`;
+
+  // preciso de autorização, token autorizathion para buscar o catálogo 
+  console.log('string search ', stringSearchCategory);
+  const category = await searchCategory(stringSearchCategory);
+
+  console.log('category', category);
+
+  const stringImage = `${process.env.NEXT_APP_IMG_API_CDN}/category/${category.codigo}?lastUpdate=${category.atualizacao}`
+  console.log('stringImage ', stringImage);
+
+
+  const domain = {};
+  const imageProperties = {};
+
 
   return {
     props: {
       domain,
       store,
-      product,
-      imageProperties,
     },
   }
 }
 
 const ShareProduct = (props) => {
-  const { domain, store, product,  imageProperties } = props;
+  const { domain, store, product, imageProperties } = props;
 
   useEffect(() => {
     // window.location.assign(`${domain.url}${domain.parameters}`);
@@ -53,26 +87,26 @@ const ShareProduct = (props) => {
   return (
     <>
       <Head>
-        <meta property="og:site_name" content={`${domain.name}`} />
-        <meta property="og:url" content={`${newDomain}`} />
+        <meta property="og:site_name" content={`${'2'}`} />
+        <meta property="og:url" content={`${'2'}`} />
         <meta name="og:title" property="og:title" content={`${store.fantasy}`} />
         <meta property="og:type" content="website" />
-        <meta name="description" content={product.description} />
-        <meta name="og:description" property="og:description" content={product.description} />
-        <meta property="og:image" content={imageProperties.url} />
-        <meta property="og:image:width" content={imageProperties.dimensions.width} />
-        <meta property="og:image:height" content={imageProperties.dimensions.height} />
+        <meta name="description" content={'2'} />
+        <meta name="og:description" property="og:description" content={'2'} />
+        <meta property="og:image" content={'2'} />
+        <meta property="og:image:width" content={'2'} />
+        <meta property="og:image:height" content={'2'} />
         <meta property="og:image:alt" content="uma imagem do produto compartilhado" />
         <meta property="og:image:type" content="image/jpg" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={`${store.fantasy}`} />
         <meta name="twitter:text:title" content={`${store.fantasy}`} />
-        <meta name="twitter:description" content={product.description} />
+        <meta name="twitter:description" content={'2'} />
         <meta name="twitter:site" content={'@muleke_kawaii'} />
-        <link rel="canonical" href={`${domain.url}`}></link>
+        <link rel="canonical" href={`${'2'}`}></link>
         <meta name="viewport" content="width=device-width, initial-scale1" />
         <meta charSet="utf-8" />
-        <title>{domain.name}</title>
+        <title>{'2'}</title>
       </Head>
       {
         // <img src={imageProperties.base64} />
