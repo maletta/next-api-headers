@@ -18,13 +18,8 @@ const Index = () =>
       <meta name="twitter:creator" content="maletta" />
       <meta name="viewport" content="width=device-width, initial-scale1" />
       <meta charSet="utf-8" />
-      <title>"Primeiro site next"</title>
+      <title>Inicial</title>
     </Head>
-    <section>
-      <div className="content">teste</div>
-      <div className="content">teste</div>
-
-    </section>
   </>;
 
 
