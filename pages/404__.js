@@ -11,8 +11,6 @@ const NotFound = () => {
       url: 'https://USER.qa.smartpos.net.br'.replace('USER', user),
     };
 
-    console.log(router);
-    console.log(domain);
     // window.location.assign(domain)
   }, [])
 

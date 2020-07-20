@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import slug from '../../../../utils/slug';
 import router from 'next/router'
 
 const NotFound = () => {

@@ -10,6 +10,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "buffer-image-size": "^0.6.4",
+    "image-size": "^0.8.3",
     "next": "^9.4.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
