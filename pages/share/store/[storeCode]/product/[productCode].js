@@ -20,7 +20,7 @@ async function searchStore(url) {
       tenantId: null,
       code: null,
       user: null,
-      fantasy: null,
+      fantasy: 'Smartpos',
     }))
 }
 
@@ -33,7 +33,6 @@ async function searchProduct(url) {
         code: productFetched.codigo,
         description: productFetched.descricao,
         observation: productFetched.observacao,
-        price: productFetched.valorVenda,
         tenantId: productFetched.tenant_id,
         update: productFetched.atualizacao,
       }
@@ -42,7 +41,6 @@ async function searchProduct(url) {
       code: null,
       description: 'Não encontrado',
       observation: 'Não encontrado',
-      price: 'Não encontrado',
       tenantId: null,
       update: null,
     }))

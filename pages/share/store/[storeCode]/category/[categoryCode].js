@@ -36,10 +36,6 @@ async function searchCategory(url) {
 export async function getServerSideProps(context) {
   const { params, req, res, query, preview, previewData } = context;
 
-  console.log(`(-----------------------------------------------`);
-  console.log("query ", query);
-  console.log('req ', `http://${req.headers.host}${req.url}`);
-
   const { storeCode, categoryCode } = query;
 
   const stringStoreFetched = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeCode}`;
@@ -49,14 +45,9 @@ export async function getServerSideProps(context) {
   const stringSearchCategory = `${process.env.NEXT_APP_MAIN_API}/categoria/${categoryCode}`;
 
   // preciso de autorização, token autorizathion para buscar o catálogo 
-  console.log('string search ', stringSearchCategory);
   const category = await searchCategory(stringSearchCategory);
 
-  console.log('category', category);
-
   const stringImage = `${process.env.NEXT_APP_IMG_API_CDN}/category/${category.codigo}?lastUpdate=${category.atualizacao}`
-  console.log('stringImage ', stringImage);
-
 
   const domain = {};
   const imageProperties = {};
@@ -75,42 +66,33 @@ const ShareProduct = (props) => {
 
   useEffect(() => {
     // window.location.assign(`${domain.url}${domain.parameters}`);
-    // const aux = new Image();
-    // aux.src = url;
-    // console.log(url)
-    // aux.onload = () => {
-    //   setImg(url);
-    // };
     console.log(imageProperties);
   }, [])
 
   return (
     <>
       <Head>
-        <meta property="og:site_name" content={`${'2'}`} />
-        <meta property="og:url" content={`${'2'}`} />
+        <meta property="og:site_name" content={`${'em desenvolvimento'}`} />
+        <meta property="og:url" content={`${'em desenvolvimento'}`} />
         <meta name="og:title" property="og:title" content={`${store.fantasy}`} />
         <meta property="og:type" content="website" />
-        <meta name="description" content={'2'} />
-        <meta name="og:description" property="og:description" content={'2'} />
-        <meta property="og:image" content={'2'} />
-        <meta property="og:image:width" content={'2'} />
-        <meta property="og:image:height" content={'2'} />
+        <meta name="description" content={'em desenvolvimento'} />
+        <meta name="og:description" property="og:description" content={'em desenvolvimento'} />
+        <meta property="og:image" content={'em desenvolvimento'} />
+        <meta property="og:image:width" content={'em desenvolvimento'} />
+        <meta property="og:image:height" content={'em desenvolvimento'} />
         <meta property="og:image:alt" content="uma imagem do produto compartilhado" />
         <meta property="og:image:type" content="image/jpg" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={`${store.fantasy}`} />
         <meta name="twitter:text:title" content={`${store.fantasy}`} />
-        <meta name="twitter:description" content={'2'} />
+        <meta name="twitter:description" content={'em desenvolvimento'} />
         <meta name="twitter:site" content={'@muleke_kawaii'} />
-        <link rel="canonical" href={`${'2'}`}></link>
+        <link rel="canonical" href={`${'em desenvolvimento'}`}></link>
         <meta name="viewport" content="width=device-width, initial-scale1" />
         <meta charSet="utf-8" />
-        <title>{'2'}</title>
+        <title>{'em desenvolvimento'}</title>
       </Head>
-      {
-        // <img src={imageProperties.base64} />
-      }
     </>
   );
 }
