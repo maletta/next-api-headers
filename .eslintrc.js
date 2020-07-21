@@ -7,6 +7,7 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
     __DEV__: 'readonly',
+    window: true,
   },
   parser: 'babel-eslint',
   parserOptions: {
@@ -19,6 +20,7 @@ module.exports = {
   plugins: ['react', 'prettier'],
   rules: {
     'prettier/prettier': 'error',
+    'no-unused-vars': ['warn', { argsIgnorePattern: 'next' }], // ignora erro de variável que não vou usar
     'react/jsx-filename-extension': [
       'warn',
       {
