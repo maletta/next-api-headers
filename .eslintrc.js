@@ -20,7 +20,6 @@ module.exports = {
   plugins: ['react', 'prettier'],
   rules: {
     'prettier/prettier': 'error',
-    'no-unused-vars': ['warn', { argsIgnorePattern: 'next' }], // ignora erro de variável que não vou usar
     'react/jsx-filename-extension': [
       'warn',
       {
@@ -34,5 +33,6 @@ module.exports = {
     'react/prop-types': 'off',
     'no-param-reassign': 'off',
     'no-console': 'off',
+    'no-unused-vars': ['warn', { argsIgnorePattern: 'next' }], // ignora erro de variável que não vou usar
   },
 };

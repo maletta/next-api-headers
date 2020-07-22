@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import sizeOf from 'buffer-image-size';
 
-import slug from '../../../../../utils/slug';
+import slug from '../../../../../../../utils/slug';
+import getImageDimensions from '../../../../../../../utils/imageDimensions';
 
 async function searchStore(url) {
   return axios
@@ -31,61 +31,89 @@ async function searchCategory(url) {
     .catch((r) => null);
 }
 
+function getDomain(req, store, category) {
+  const hostDomain = `https://${req.headers.host}${req.url}`;
+  if (store.tenantId && category)
+    return {
+      name: store.fantasy,
+      url: process.env.NEXT_APP_CATALOG_URL.replace('USER', store.user),
+      parameters: `?categoria=${category.code}&nome=${category.name}`,
+      hostDomain,
+    };
+  return {
+    name: 'Smartpos',
+    url: 'https://www.smartpos.net.br',
+    parameters: '',
+    hostDomain,
+  };
+}
+
 export async function getServerSideProps(context) {
   const { params, req, res, query, preview, previewData } = context;
 
-  const { storeCode, categoryCode } = query;
+  console.log('--', query);
+
+  const { storeCode, categoryCode, categoryName } = query;
 
   const stringStoreFetched = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeCode}`;
 
   const store = await searchStore(stringStoreFetched);
 
-  const stringSearchCategory = `${process.env.NEXT_APP_MAIN_API}/categoria/${categoryCode}`;
+  const stringSearchCategory = `${process.env.NEXT_APP_IMG_API}/category/${categoryCode}`;
 
-  // preciso de autorização, token autorizathion para buscar o catálogo
-  const category = await searchCategory(stringSearchCategory);
+  const category = {
+    code: categoryCode,
+    name: categoryName,
+  };
+  const domain = getDomain(req, store, category);
+  const imageProperties = await getImageDimensions(stringSearchCategory);
 
-  const stringImage = `${process.env.NEXT_APP_IMG_API_CDN}/category/${category.codigo}?lastUpdate=${category.atualizacao}`;
-
-  const domain = {};
-  const imageProperties = {};
+  console.log(imageProperties);
 
   return {
     props: {
+      category,
       domain,
+      imageProperties,
       store,
     },
   };
 }
 
 const ShareProduct = (props) => {
-  const { domain, store, product, imageProperties } = props;
+  const { category, domain, imageProperties, store } = props;
 
   useEffect(() => {
     // window.location.assign(`${domain.url}${domain.parameters}`);
-    console.log(imageProperties);
+    // console.log(imageProperties);
   }, []);
 
   return (
     <>
       <Head>
-        <meta property="og:site_name" content={`${'em desenvolvimento'}`} />
-        <meta property="og:url" content={`${'em desenvolvimento'}`} />
+        <meta property="og:site_name" content={`${domain.name}`} />
+        <meta property="og:url" content={`${domain.hostDomain}`} />
         <meta
           name="og:title"
           property="og:title"
           content={`${store.fantasy}`}
         />
         <meta property="og:type" content="website" />
-        <meta name="description" content="em desenvolvimento" />
+        <meta name="description" content={category.name} />
         <meta
           name="og:description"
           property="og:description"
-          content="em desenvolvimento"
+          content={category.name}
         />
-        <meta property="og:image" content="em desenvolvimento" />
-        <meta property="og:image:width" content="em desenvolvimento" />
-        <meta property="og:image:height" content="em desenvolvimento" />
+        <meta property="og:image" content={imageProperties.url} />
+        <meta
+          property="og:image:width"
+          content={imageProperties.dimensions.width}
+        />
+        <meta
+          property="og:image:height"
+          content={imageProperties.dimensions.height}
+        />
         <meta
           property="og:image:alt"
           content="uma imagem do produto compartilhado"
@@ -94,12 +122,11 @@ const ShareProduct = (props) => {
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={`${store.fantasy}`} />
         <meta name="twitter:text:title" content={`${store.fantasy}`} />
-        <meta name="twitter:description" content="em desenvolvimento" />
-        <meta name="twitter:site" content="@muleke_kawaii" />
-        <link rel="canonical" href={`${'em desenvolvimento'}`} />
+        <meta name="twitter:description" content={category.name} />
+        <link rel="canonical" href={`${domain.url}`} />
         <meta name="viewport" content="width=device-width, initial-scale1" />
         <meta charSet="utf-8" />
-        <title>em desenvolvimento</title>
+        <title>{domain.name}</title>
       </Head>
     </>
   );

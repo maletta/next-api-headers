@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import sizeOf from 'buffer-image-size';
 
 import slug from '../../../../../utils/slug';
+import getImageDimensions from '../../../../../utils/imageDimensions';
 
 async function searchStore(url) {
   return axios
@@ -46,7 +46,7 @@ async function searchProduct(url) {
     }));
 }
 
-function getDomain(req, res, store, product) {
+function getDomain(req, store, product) {
   const hostDomain = `https://${req.headers.host}${req.url}`;
   if (store.tenantId && product)
     return {
@@ -63,28 +63,12 @@ function getDomain(req, res, store, product) {
   };
 }
 
-async function downloadImage(url) {
-  return axios
-    .get(url, {
-      responseType: 'arraybuffer',
-    })
-    .then((response) => {
-      const buffer = Buffer.from(response.data, 'binary');
-
-      const dimensions = sizeOf(buffer);
-      return {
-        dimensions: dimensions || { width: 0, height: 0 },
-        url,
-      };
-    });
-}
-
 async function getImageProperties(product) {
   const imageUrl = product.code
     ? `${process.env.NEXT_APP_IMG_API_CDN}/product/${product.code}?lastUpdate=${product.update}`
     : 'https://null.qa.smartpos.net.br/images/catalogo-share.jpg';
 
-  return downloadImage(imageUrl).then((r) => r);
+  return getImageDimensions(imageUrl).then((r) => r);
 }
 
 export async function getServerSideProps(context) {
@@ -98,7 +82,7 @@ export async function getServerSideProps(context) {
   const stringProduct = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${store.tenantId}/produtos/${productCode}`;
   const product = await searchProduct(stringProduct);
 
-  const domain = getDomain(req, res, store, product);
+  const domain = getDomain(req, store, product);
   const imageProperties = await getImageProperties(product);
 
   return {
@@ -116,7 +100,7 @@ const ShareProduct = (props) => {
 
   useEffect(() => {
     // window.location.assign(`${domain.url}${domain.parameters}`);
-    console.log(imageProperties);
+    // console.log(imageProperties);
   }, []);
 
   return (
@@ -154,7 +138,6 @@ const ShareProduct = (props) => {
         <meta name="twitter:title" content={`${store.fantasy}`} />
         <meta name="twitter:text:title" content={`${store.fantasy}`} />
         <meta name="twitter:description" content={product.description} />
-        <meta name="twitter:site" content="@muleke_kawaii" />
         <link rel="canonical" href={`${domain.url}`} />
         <meta name="viewport" content="width=device-width, initial-scale1" />
         <meta charSet="utf-8" />
