@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 
 import slug from '../../../../../utils/slug';
@@ -16,7 +16,7 @@ async function searchStore(url) {
         fantasy: response.data.fantasia,
       };
     })
-    .catch((response) => ({
+    .catch(() => ({
       tenantId: null,
       code: null,
       user: null,
@@ -37,7 +37,7 @@ async function searchProduct(url) {
         update: productFetched.atualizacao,
       };
     })
-    .catch((response) => ({
+    .catch(() => ({
       code: null,
       description: 'Não encontrado',
       observation: 'Não encontrado',
@@ -72,7 +72,7 @@ async function getImageProperties(product) {
 }
 
 export async function getServerSideProps(context) {
-  const { params, req, res, query, preview, previewData } = context;
+  const { req, query } = context;
 
   const { storeCode, productCode } = query;
 
@@ -96,11 +96,10 @@ export async function getServerSideProps(context) {
 }
 
 const ShareProduct = (props) => {
-  const { store, product, domain, image, imageProperties } = props;
+  const { store, product, domain, imageProperties } = props;
 
   useEffect(() => {
     // window.location.assign(`${domain.url}${domain.parameters}`);
-    // console.log(imageProperties);
   }, []);
 
   return (

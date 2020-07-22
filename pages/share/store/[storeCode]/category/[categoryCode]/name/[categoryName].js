@@ -1,8 +1,7 @@
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 
-import slug from '../../../../../../../utils/slug';
 import getImageDimensions from '../../../../../../../utils/imageDimensions';
 
 async function searchStore(url) {
@@ -16,19 +15,12 @@ async function searchStore(url) {
         fantasy: response.data.fantasia,
       };
     })
-    .catch((response) => ({
+    .catch(() => ({
       tenantId: null,
       code: null,
       user: null,
       fantasy: null,
     }));
-}
-
-async function searchCategory(url) {
-  return axios
-    .get(url)
-    .then((r) => r.data)
-    .catch((r) => null);
 }
 
 function getDomain(req, store, category) {
@@ -49,9 +41,7 @@ function getDomain(req, store, category) {
 }
 
 export async function getServerSideProps(context) {
-  const { params, req, res, query, preview, previewData } = context;
-
-  console.log('--', query);
+  const { req, query } = context;
 
   const { storeCode, categoryCode, categoryName } = query;
 
@@ -67,8 +57,6 @@ export async function getServerSideProps(context) {
   };
   const domain = getDomain(req, store, category);
   const imageProperties = await getImageDimensions(stringSearchCategory);
-
-  console.log(imageProperties);
 
   return {
     props: {
