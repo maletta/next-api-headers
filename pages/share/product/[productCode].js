@@ -2,8 +2,8 @@ import Head from 'next/head';
 import React, { useEffect } from 'react';
 import axios from 'axios';
 
-import slug from '../../../../../utils/slug';
-import getImageDimensions from '../../../../../utils/imageDimensions';
+import slug from '../../../utils/slug';
+import getImageDimensions from '../../../utils/imageDimensions';
 
 async function searchStore(url) {
   return axios
@@ -91,19 +91,16 @@ export async function getServerSideProps(context) {
       product,
       domain,
       imageProperties,
-      req,
     },
   };
 }
 
 const ShareProduct = (props) => {
-  const { store, product, domain, imageProperties, req } = props;
+  const { store, product, domain, imageProperties } = props;
 
   useEffect(() => {
     // window.location.assign(`${domain.url}${domain.parameters}`);
   }, []);
-
-  console.log('req', req);
 
   return (
     <>

@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Head from 'next/head';
-import router from 'next/router';
 
-const NotFound = () => {
-  useEffect(() => {
-    const user = router.query.storeCode || '_';
-    const domain = {
-      url: 'https://USER.qa.smartpos.net.br'.replace('USER', user),
-    };
+export async function getServerSideProps(context) {
+  const domain = '';
 
-    window.location.assign(domain.url);
-  }, []);
+  return {
+    props: {
+      domain,
+      context,
+    },
+  };
+}
+
+const Index = ({ domain, context }) => {
+  console.log(context);
 
   return (
     <>
@@ -27,7 +30,7 @@ const NotFound = () => {
         />
         <meta
           property="og:image"
-          content="https://null.qa.smartpos.net.br/images/catalogo-share.jpg"
+          content="https://smartposbr.qa.smartpos.net.br/images/catalogo-share.jpg"
         />
         <meta
           property="og:image:alt"
@@ -41,10 +44,10 @@ const NotFound = () => {
         <link rel="canonical" href="https://www.smartpos.net.br/" />
         <meta name="viewport" content="width=device-width, initial-scale1" />
         <meta charSet="utf-8" />
-        <title>Smartpos</title>
+        <title>HealthCheck</title>
       </Head>
     </>
   );
 };
 
-export default NotFound;
+export default Index;

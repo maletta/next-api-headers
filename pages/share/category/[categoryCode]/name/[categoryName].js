@@ -2,8 +2,7 @@ import Head from 'next/head';
 import React, { useEffect } from 'react';
 import axios from 'axios';
 
-import slug from '../../../../../utils/slug';
-import getImageDimensions from '../../../../../utils/imageDimensions';
+import getImageDimensions from '../../../../../../../utils/imageDimensions';
 
 async function searchStore(url) {
   return axios
@@ -20,39 +19,17 @@ async function searchStore(url) {
       tenantId: null,
       code: null,
       user: null,
-      fantasy: 'Smartpos',
+      fantasy: null,
     }));
 }
 
-async function searchProduct(url) {
-  return axios
-    .get(url)
-    .then((response) => {
-      const productFetched = response.data;
-      return {
-        code: productFetched.codigo,
-        description: productFetched.descricao,
-        observation: productFetched.observacao,
-        tenantId: productFetched.tenant_id,
-        update: productFetched.atualizacao,
-      };
-    })
-    .catch(() => ({
-      code: null,
-      description: 'Não encontrado',
-      observation: 'Não encontrado',
-      tenantId: null,
-      update: null,
-    }));
-}
-
-function getDomain(req, store, product) {
+function getDomain(req, store, category) {
   const hostDomain = `https://${req.headers.host}${req.url}`;
-  if (store.tenantId && product)
+  if (store.tenantId && category)
     return {
       name: store.fantasy,
       url: process.env.NEXT_APP_CATALOG_URL.replace('USER', store.user),
-      parameters: `/item/${product.code}/${slug(product.description)}`,
+      parameters: `?categoria=${category.code}&nome=${category.name}`,
       hostDomain,
     };
   return {
@@ -63,47 +40,41 @@ function getDomain(req, store, product) {
   };
 }
 
-async function getImageProperties(product) {
-  const imageUrl = product.code
-    ? `${process.env.NEXT_APP_IMG_API_CDN}/product/${product.code}?lastUpdate=${product.update}`
-    : 'https://null.qa.smartpos.net.br/images/catalogo-share.jpg';
-
-  return getImageDimensions(imageUrl).then((r) => r);
-}
-
 export async function getServerSideProps(context) {
   const { req, query } = context;
 
-  const { storeCode, productCode } = query;
+  const { storeCode, categoryCode, categoryName } = query;
 
   const stringStoreFetched = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeCode}`;
+
   const store = await searchStore(stringStoreFetched);
 
-  const stringProduct = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${store.tenantId}/produtos/${productCode}`;
-  const product = await searchProduct(stringProduct);
+  const stringSearchCategory = `${process.env.NEXT_APP_IMG_API}/category/${categoryCode}`;
 
-  const domain = getDomain(req, store, product);
-  const imageProperties = await getImageProperties(product);
+  const category = {
+    code: categoryCode,
+    name: categoryName,
+  };
+  const domain = getDomain(req, store, category);
+  const imageProperties = await getImageDimensions(stringSearchCategory);
 
   return {
     props: {
-      store,
-      product,
+      category,
       domain,
       imageProperties,
-      req,
+      store,
     },
   };
 }
 
 const ShareProduct = (props) => {
-  const { store, product, domain, imageProperties, req } = props;
+  const { category, domain, imageProperties, store } = props;
 
   useEffect(() => {
     // window.location.assign(`${domain.url}${domain.parameters}`);
+    // console.log(imageProperties);
   }, []);
-
-  console.log('req', req);
 
   return (
     <>
@@ -116,11 +87,11 @@ const ShareProduct = (props) => {
           content={`${store.fantasy}`}
         />
         <meta property="og:type" content="website" />
-        <meta name="description" content={product.description} />
+        <meta name="description" content={category.name} />
         <meta
           name="og:description"
           property="og:description"
-          content={product.description}
+          content={category.name}
         />
         <meta property="og:image" content={imageProperties.url} />
         <meta
@@ -139,7 +110,7 @@ const ShareProduct = (props) => {
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={`${store.fantasy}`} />
         <meta name="twitter:text:title" content={`${store.fantasy}`} />
-        <meta name="twitter:description" content={product.description} />
+        <meta name="twitter:description" content={category.name} />
         <link rel="canonical" href={`${domain.url}`} />
         <meta name="viewport" content="width=device-width, initial-scale1" />
         <meta charSet="utf-8" />
