@@ -7,7 +7,7 @@ COPY package.json ./
 COPY /pages/ ./pages/
 COPY /utils/ ./utils/
 
-RUN npm Install
+RUN npm install
 
 EXPOSE 80
 CMD ["npm", "run", "dev"]
