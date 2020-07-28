@@ -6,7 +6,6 @@ WORKDIR /app
 COPY package.json ./
 COPY /pages/ ./pages/
 COPY /utils/ ./utils/
-COPY .env ./
 
 RUN npm Install
 
