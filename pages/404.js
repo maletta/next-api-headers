@@ -1,48 +1,92 @@
 import React, { useEffect } from 'react';
-import Head from 'next/head';
 import router from 'next/router';
+import styled from 'styled-components';
 
-const NotFound = () => {
+import Head from '../src/components/Head';
+import { getStoreNameFromBrowser } from '../src/utils/getStoreName';
+import GlobalStyles from '../src/Styles/GlobalStyles';
+import store from '../src/assets/online-store.png';
+
+const Image = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 50px;
+`;
+
+const Text = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.75rem;
+  padding-bottom: 150px;
+
+  @media (max-width: 720px) {
+    font-size: 1.75rem;
+  }
+`;
+
+const Container = styled.div`
+  height: 100vh;
+  width: 100vw;
+  background-color: #ebebeb;
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  justify-content: center;
+`;
+
+export async function getStaticProps() {
+  const properties = {
+    description: 'Loja não encontrada',
+    imageAlt: 'imagem genérica que representa o catálogo da Smartpos',
+    imageWidth: null,
+    imageHeight: null,
+    imageUrl: `${process.env.NEXT_APP_CATALOG_URL}/images/catalogo-share.jpg`,
+    siteName: 'Smartpos',
+    siteUrl: 'https://www.smartpos.net.br/',
+    title: 'Smartpos',
+  };
+
+  return {
+    props: { ...properties },
+  };
+}
+
+const NotFound = (props) => {
   useEffect(() => {
-    const user = router.query.storeCode || '_';
-    const domain = {
-      url: 'https://USER.qa.smartpos.net.br'.replace('USER', user),
-    };
+    const storeCode = getStoreNameFromBrowser();
+    const storeParam = router.query.store;
+    const user = storeCode || storeParam;
 
-    window.location.assign(domain.url);
+    if (user) {
+      const domain = `${process.env.NEXT_APP_CATALOG_URL}`.replace(
+        'USER',
+        user
+      );
+
+      window.location.assign(domain);
+    }
   }, []);
 
   return (
     <>
-      <Head>
-        <meta property="og:site_name" content="Smartpos" />
-        <meta property="og:url" content="https://www.smartpos.net.br/" />
-        <meta name="og:title" property="og:title" content="Smartpos" />
-        <meta property="og:type" content="website" />
-        <meta name="description" content="Loja não encontrada" />
-        <meta
-          name="og:description"
-          property="og:description"
-          content="Loja não encontrada"
-        />
-        <meta
-          property="og:image"
-          content="https://null.qa.smartpos.net.br/images/catalogo-share.jpg"
-        />
-        <meta
-          property="og:image:alt"
-          content="imagem genérica que representa o catálogo da Smartpos"
-        />
-        <meta property="og:image:type" content="image/jpg" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Smartpos" />
-        <meta name="twitter:text:title" content="Smartpos" />
-        <meta name="twitter:description" content="Loja não encontrada" />
-        <link rel="canonical" href="https://www.smartpos.net.br/" />
-        <meta name="viewport" content="width=device-width, initial-scale1" />
-        <meta charSet="utf-8" />
-        <title>Smartpos</title>
-      </Head>
+      <Head {...props} />
+      <GlobalStyles />
+      <Container>
+        <Image>
+          <img src={store} alt="store" width="300px" />
+        </Image>
+        <Text>
+          <span className="404page">Loja não encontrada.</span>
+        </Text>
+        <Footer>
+          <p>
+            <strong>SmartPOS</strong>
+          </p>
+        </Footer>
+      </Container>
     </>
   );
 };

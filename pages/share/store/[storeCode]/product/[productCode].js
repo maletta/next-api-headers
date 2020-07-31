@@ -2,8 +2,8 @@ import Head from 'next/head';
 import React, { useEffect } from 'react';
 import axios from 'axios';
 
-import slug from '../../../../../utils/slug';
-import getImageDimensions from '../../../../../utils/imageDimensions';
+import slug from '../../../../../src/utils/slug';
+import getImageDimensions from '../../../../../src/utils/imageDimensions';
 
 async function searchStore(url) {
   return axios

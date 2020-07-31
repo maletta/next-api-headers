@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React, { useEffect } from 'react';
 import axios from 'axios';
 
-import getImageDimensions from '../../../../../../../utils/imageDimensions';
+import getImageDimensions from '../../../../../../../src/utils/imageDimensions';
 
 async function searchStore(url) {
   return axios
