@@ -5,7 +5,7 @@ WORKDIR /app
 # Install app dependencies
 COPY package.json ./
 COPY /pages/ ./pages/
-COPY /utils/ ./utils/
+COPY /src/ ./src/
 
 RUN npm install
 
