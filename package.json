@@ -5,11 +5,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "next",
-    "build": "next build",
     "build-vercel": "vercel --prod",
+    "build-start": "next build && next start",
     "lint": "yarn run eslint",
-    "eslint-fix": "eslint --fix \"./pages/**/*.js\" \"./pages/**/*.jsx\" --no-error-on-unmatched-pattern",
-    "start": "next start"
+    "eslint-fix": "eslint --fix \"./pages/**/*.js\" \"./pages/**/*.jsx\" --no-error-on-unmatched-pattern"
   },
   "dependencies": {
     "axios": "^0.19.2",
