@@ -48,22 +48,24 @@ export async function getServerSideProps(context) {
 
   const storeFromUrl = getStoreNameFromServer(req.headers.host) || storeCode;
 
-  const stringStoreFetched = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeFromUrl}`;
-
-  const store = await searchStore(stringStoreFetched);
-
-  const stringSearchCategory = `${process.env.NEXT_APP_IMG_API}/category/${categoryCode}`;
+  const store = await searchStore(
+    `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeFromUrl}`
+  );
 
   const category = {
     code: categoryCode,
     name: categoryName,
   };
+
   const domain = getDomain(req, store, category);
-  const imageProperties = await getImageDimensions(stringSearchCategory);
+
+  const imageProperties = await getImageDimensions(
+    `${process.env.NEXT_APP_IMG_API}/category/${categoryCode}`
+  );
 
   const headProps = {
     description: category.name,
-    imageAlt: 'uma imagem do produto compartilhado',
+    imageAlt: 'uma imagem genérica que representa uma categoria de produtos',
     imageHeight: imageProperties.dimensions.height,
     imageUrl: imageProperties.url,
     imageWidth: imageProperties.dimensions.width,
@@ -84,8 +86,7 @@ const ShareProduct = (props) => {
   const { domain, headProps } = props;
 
   useEffect(() => {
-    // window.location.assign(`${domain.url}${domain.parameters}`);
-    // console.log(imageProperties);
+    window.location.assign(`${domain.url}${domain.parameters}`);
   }, []);
 
   return (

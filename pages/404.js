@@ -79,12 +79,10 @@ const NotFound = (props) => {
           <img src={store} alt="store" width="300px" />
         </Image>
         <Text>
-          <span className="404page">Loja não encontrada.</span>
+          <span>Loja não encontrada.</span>
         </Text>
         <Footer>
-          <p>
-            <strong>SmartPOS</strong>
-          </p>
+          <strong>SmartPOS</strong>
         </Footer>
       </Container>
     </>

@@ -16,12 +16,12 @@ async function searchStore(url) {
         fantasy: response.data.fantasia,
       };
     })
-    .catch(() => ({
+    .catch({
       tenantId: null,
       code: null,
       user: null,
       fantasy: 'Smartpos',
-    }));
+    });
 }
 
 async function searchProduct(url) {
@@ -72,19 +72,22 @@ async function getImageProperties(product) {
 }
 
 export async function getServerSideProps(context) {
-  const { req, query, params } = context;
+  const { req, query } = context;
 
-  const { productCode } = query;
-  const { storeCode } = params;
+  const { productCode, storeCode } = query;
 
   const storeFromUrl = getStoreNameFromServer(req.headers.host) || storeCode;
-  const stringStoreFetched = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeFromUrl}`;
-  const store = await searchStore(stringStoreFetched);
 
-  const stringProduct = `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${store.tenantId}/produtos/${productCode}`;
-  const product = await searchProduct(stringProduct);
+  const store = await searchStore(
+    `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${storeFromUrl}`
+  );
+
+  const product = await searchProduct(
+    `${process.env.NEXT_APP_SERVICE_API}/catalog/v1/loja/${store.tenantId}/produtos/${productCode}`
+  );
 
   const domain = getDomain(req, store, product);
+
   const imageProperties = await getImageProperties(product);
 
   const headProps = {
@@ -107,8 +110,7 @@ const ShareProduct = (props) => {
   const { domain, headProps } = props;
 
   useEffect(() => {
-    // window.location.assign(`${domain.url}${domain.parameters}`);
-    console.log(props);
+    window.location.assign(`${domain.url}${domain.parameters}`);
   }, []);
 
   return <Head {...headProps} />;
