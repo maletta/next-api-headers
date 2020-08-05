@@ -5,6 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "next",
+    "build": "next build",
+    "next-start": "next start --port 80", 
     "build-vercel": "vercel --prod",
     "build-start": "next build && next start --port 80",
     "lint": "yarn run eslint",

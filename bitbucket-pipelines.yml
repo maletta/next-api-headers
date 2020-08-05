@@ -20,6 +20,8 @@ pipelines:
           image: atlassian/pipelines-awscli:latest
           deployment: test
           script:
+            - yarn install
+            - yarn build
             # aws login
             - eval $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
             # docker
@@ -37,6 +39,8 @@ pipelines:
           image: atlassian/pipelines-awscli:latest
           deployment: production
           script:
+            - yarn install
+            - yarn build
             # aws login
             - eval $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
             # docker
