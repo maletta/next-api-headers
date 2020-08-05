@@ -6,9 +6,10 @@ WORKDIR /app
 COPY package.json ./
 COPY next.config.js ./
 COPY /pages/ ./pages/
-COPY /src/ ./src/
+# COPY /src/ ./src/
+COPY .next/ ./.next/
 
 RUN npm install
 
 EXPOSE 80
-CMD ["npm", "run", "build-start"]
+CMD ["npm", "run", "next-start"]
