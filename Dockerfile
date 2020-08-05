@@ -4,6 +4,7 @@ WORKDIR /app
 
 # Install app dependencies
 COPY package.json ./
+COPY next.config.js ./
 COPY /pages/ ./pages/
 COPY /src/ ./src/
 

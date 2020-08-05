@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next",
     "build-vercel": "vercel --prod",
-    "build-start": "next build && next start",
+    "build-start": "next build && next start --port 80",
     "lint": "yarn run eslint",
     "eslint-fix": "eslint --fix \"./pages/**/*.js\" \"./pages/**/*.jsx\" --no-error-on-unmatched-pattern"
   },
