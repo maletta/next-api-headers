@@ -17,7 +17,7 @@ pipelines:
           caches:
             - node
           name: 🚀 Deploy development environment
-          image: atlassian/pipelines-awscli:latest
+          image: netpos/node-aws
           deployment: test
           script:
             - yarn install
@@ -36,7 +36,7 @@ pipelines:
           caches:
             - node
           name: 🚀 Deploy production environment
-          image: atlassian/pipelines-awscli:latest
+          image: netpos/node-aws
           deployment: production
           script:
             - yarn install
