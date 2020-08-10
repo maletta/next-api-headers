@@ -8,7 +8,7 @@ import getStoreNameFromServer from '../../../src/utils/getStoreName';
 async function searchStore(url) {
   let store = null;
   try {
-    store = axios.get(url).then((response) => {
+    store = await axios.get(url).then((response) => {
       return {
         tenantId: response.data.id,
         code: response.data.codigo,
@@ -25,6 +25,7 @@ async function searchStore(url) {
     };
   }
 
+  console.log(store, 'store result');
   return store;
 }
 
