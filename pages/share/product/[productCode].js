@@ -6,22 +6,26 @@ import getImageDimensions from '../../../src/utils/imageDimensions';
 import getStoreNameFromServer from '../../../src/utils/getStoreName';
 
 async function searchStore(url) {
-  return axios
-    .get(url)
-    .then((response) => {
+  let store = null;
+  try {
+    store = axios.get(url).then((response) => {
       return {
         tenantId: response.data.id,
         code: response.data.codigo,
         user: response.data.usuario,
         fantasy: response.data.fantasia,
       };
-    })
-    .catch({
+    });
+  } catch (err) {
+    store = {
       tenantId: null,
       code: null,
       user: null,
       fantasy: 'Smartpos',
-    });
+    };
+  }
+
+  return store;
 }
 
 async function searchProduct(url) {
