@@ -2,11 +2,15 @@ image: netpos/node-aws
 options:
   docker: true
 
+definitions:
+  caches:
+    nextcache: .next/cache
 pipelines:
   default:
     - step:
         caches:
           - node
+          - nextcache
         name: ✨ Lint
         script:
           - yarn install
