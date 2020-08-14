@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Head from '../src/components/Head';
 import { getStoreNameFromBrowser } from '../src/utils/getStoreName';
 import GlobalStyles from '../src/Styles/GlobalStyles';
-import store from '../src/assets/online-store.png';
+// import store from '../src/assets/online-store.png';
 
 const Image = styled.div`
   display: flex;
@@ -75,9 +75,9 @@ const Index = (props) => {
       <Head {...props} />
       <GlobalStyles />
       <Container>
-        <Image>
+        {/* <Image>
           <img src={store} alt="store" width="300px" />
-        </Image>
+        </Image> */}
         <Text>
           <span>Loja não encontrada.</span>
         </Text>

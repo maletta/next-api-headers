@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "next-start": "next start --port 80", 
+    "next-start": "next start --port 80",
     "build-vercel": "vercel --prod",
     "build-start": "next build && next start --port 80",
     "lint": "yarn run eslint",
@@ -16,7 +16,7 @@
     "axios": "^0.19.2",
     "buffer-image-size": "^0.6.4",
     "image-size": "^0.8.3",
-    "next": "^9.4.4",
+    "next": "^9.5.2",
     "next-images": "^1.4.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
