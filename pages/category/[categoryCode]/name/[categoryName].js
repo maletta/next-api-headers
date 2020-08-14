@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 
-import Head from '../../../../../src/components/Head';
-import getImageDimensions from '../../../../../src/utils/imageDimensions';
-import getStoreNameFromServer from '../../../../../src/utils/getStoreName';
+import Head from '../../../../src/components/Head';
+import getImageDimensions from '../../../../src/utils/imageDimensions';
+import getStoreNameFromServer from '../../../../src/utils/getStoreName';
 
 async function searchStore(url) {
   return axios
