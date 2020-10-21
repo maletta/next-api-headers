@@ -25,30 +25,41 @@ async function searchStore(url) {
     };
   }
 
-  console.log(store, 'store result');
+  console.log('compartilhando produto');
+  console.log('-------------------');
+  console.log('procurando loja');
+  console.log(store);
   return store;
 }
 
 async function searchProduct(url) {
+  console.log('-------------------');
+  console.log('procurando produto');
   return axios
     .get(url)
     .then((response) => {
       const productFetched = response.data;
-      return {
+      const product = {
         code: productFetched.codigo,
         description: productFetched.descricao,
         observation: productFetched.observacao,
         tenantId: productFetched.tenant_id,
         update: productFetched.atualizacao,
       };
+      console.log(product);
+      return product;
     })
-    .catch(() => ({
-      code: null,
-      description: 'Não encontrado',
-      observation: 'Não encontrado',
-      tenantId: null,
-      update: null,
-    }));
+    .catch(() => {
+      const product = {
+        code: null,
+        description: 'Não encontrado',
+        observation: 'Não encontrado',
+        tenantId: null,
+        update: null,
+      };
+      console.log(product);
+      return product;
+    });
 }
 
 function getDomain(req, store, product) {
